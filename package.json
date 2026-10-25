@@ -1,0 +1,12 @@
+{
+  "name": "codelens",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install && npm --prefix client install && pip install -r backend/requirements.txt",
+    "backend": "cd backend && python -m uvicorn app:app --reload --port 4000",
+    "client": "npm --prefix client run dev",
+    "dev": "concurrently -n backend,client -c blue,green \"npm run backend\" \"npm run client\"",
+    "seed": "cd backend && python seed.py"
+  },
+  "devDependencies": { "concurrently": "^9.0.1" }
+}

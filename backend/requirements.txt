@@ -1,0 +1,27 @@
+# ── Web Framework ─────────────────────────────────────────────────────────────
+fastapi
+uvicorn
+python-multipart
+requests                 # download the repo zip from GitHub
+
+# ── Database ──────────────────────────────────────────────────────────────────
+pymongo
+
+# ── LLM Orchestration — LangChain LCEL + Mistral ──────────────────────────────
+langchain
+langchain-core
+langchain-community
+langchain-text-splitters
+langchain-mistralai
+
+# ── RAG Pipeline ──────────────────────────────────────────────────────────────
+chromadb
+langchain-chroma
+sentence-transformers
+langchain-huggingface
+
+# ── Utilities ─────────────────────────────────────────────────────────────────
+python-dotenv
+
+# Groq (optional, free alternative to Mistral)
+langchain-groq
