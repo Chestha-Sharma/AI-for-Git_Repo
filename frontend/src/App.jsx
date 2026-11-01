@@ -40,8 +40,7 @@ const App = () => {
           <Route path="/" element={<DashboardPage />} />
           <Route path="/files" element={<FilesPage />} />
           <Route path="/repos" element={<ReposPage />} /> 
-          <Route path="/assistant" element={<AssistantPage />} />
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/assistant" element={<AssistantPage />} /> 
         </Routes>
       </main>
 
