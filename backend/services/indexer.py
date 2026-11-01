@@ -36,7 +36,22 @@ def index_repository(url: str, progress=lambda text: None) -> dict:
     return repo_to_dict(doc)
 
 
+def reindex_repository(repo_id: str) -> dict:
+    """Rebuild only the vector chunks of an already indexed repo, from the files saved in MongoDB (no GitHub download)."""
+    repo = repos_col.find_one({"_id": repo_id})
+    if not repo:
+        raise ValueError("Repo not found.")
+    files = list(files_col.find({"repo": repo_id}))
+    if not files:
+        raise ValueError("No saved files for this repo. Delete it and add it again.")
+    chunks = build_vector_store(repo_id, files)
+    repos_col.update_one({"_id": repo_id}, {"$set": {"chunks": chunks}})
+    return repo_to_dict({**repo, "chunks": chunks})
+
+
 def delete_repository(repo_id: str) -> None:
     files_col.delete_many({"repo": repo_id})
     repos_col.delete_one({"_id": repo_id})
     delete_vector_store(repo_id)
+
+

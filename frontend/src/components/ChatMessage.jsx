@@ -1,6 +1,7 @@
-import React from 'react'
-import { Bot, FileCode, ThumbsDown, ThumbsUp, User } from 'lucide-react'
+import React, { useState } from 'react'
+import { Bot, FileCode, RefreshCw, ThumbsDown, ThumbsUp, User } from 'lucide-react'
 import useChatStore from '../store/useChatStore.js'
+import useRepoStore from '../store/useRepoStore.js'
 import Markdown from './Markdown.jsx'
 
 const confidenceColor = (c) => (c >= 0.5 ? 'badge-success' : c >= 0.25 ? 'badge-warning' : 'badge-error')
@@ -8,10 +9,20 @@ const confidenceColor = (c) => (c >= 0.5 ? 'badge-success' : c >= 0.25 ? 'badge-
 const ChatMessage = ({ message, onOpen, resolvePath }) => {
   const rateMessage = useChatStore((s) => s.rateMessage)
   const isUser = message.role === 'user'
-  const repo = message.meta?.repoId
+    const repo = message.meta?.repoId
+  const reindexRepo = useRepoStore((s) => s.reindexRepo)
+  const [busy, setBusy] = useState(false)
+  const [done, setDone] = useState(false)
+  const needsReindex = !isUser && message.meta?.note === 'index_empty'
 
   const open = (ref) => repo && onOpen({ repo, ...ref })
 
+  const handleReindex = async () => {
+    setBusy(true)
+    const ok = await reindexRepo(repo)
+    setBusy(false)
+    if (ok) setDone(true)
+  }
   return (
     <div className={`rise flex gap-3 ${isUser ? 'flex-row-reverse' : ''}`}>
       <div className={`flex size-8 shrink-0 items-center justify-center rounded-full ${isUser ? 'bg-base-300' : 'bg-gradient-to-br from-primary to-secondary text-primary-content'}`}>
@@ -22,6 +33,16 @@ const ChatMessage = ({ message, onOpen, resolvePath }) => {
         <div className={`inline-block rounded-2xl px-4 py-2.5 text-left shadow-sm ${isUser ? 'rounded-tr-sm bg-primary text-primary-content' : 'rounded-tl-sm border border-base-300 bg-base-100'}`}>
           {isUser ? <p className="whitespace-pre-wrap text-sm">{message.content}</p> : <Markdown text={message.content} onRef={open} resolvePath={resolvePath} />}
         </div>
+        
+                {/* chunks vector_db se gayab ho gaye hon to ek click me dobara bana do */}
+        {needsReindex && (
+          <div className="text-left">
+            <button className="btn btn-primary btn-sm gap-1" onClick={handleReindex} disabled={busy || done}>
+              <RefreshCw className={`size-3.5 ${busy ? 'animate-spin' : ''}`} />
+              {busy ? 'Re-indexing…' : done ? 'Done, ask again' : 'Re-index this repo'}
+            </button>
+          </div>
+        )}
 
         {/* sources: kaun si file / lines se jawab aaya. click karo to code khulta hai */}
         {message.citations?.length > 0 && (

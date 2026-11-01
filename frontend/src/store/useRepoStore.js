@@ -41,6 +41,20 @@ const useRepoStore = create((set, get) => ({
     }
   },
 
+
+    // sirf chunks dobara banao (MongoDB ke code se), repo GitHub se dobara download nahi hota
+  reindexRepo: async (id) => {
+    try {
+      await axiosInstance.post(`/repos/${id}/reindex`, null, { timeout: 600000 })
+      toast.success('Re-indexed. Ask your question again.')
+      await get().fetchRepos()
+      return true
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Re-indexing failed. Try again.')
+      return false
+    }
+  },
+
   removeRepo: async (id) => {
     try {
       await axiosInstance.delete(`/repos/${id}`)

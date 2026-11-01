@@ -154,7 +154,7 @@ async def ask_question(repo: str, question: str, analysis: dict, history: list =
     if vector_store._collection.count() == 0:
         # Chroma missing collection ko chupchap khaali bana deta hai -> search [] deta hai
         return {"content": "This repo is indexed in MongoDB but its code chunks are missing from the local vector DB "
-                           "(`backend/vector_db`). Delete the repo and add it again to re-index.",
+                           "(`backend/vector_db`). Click **Re-index this repo** below to rebuild them.",
                 "citations": [], "confidence": 0.0, "source": "extractive", "note": "index_empty"}
     results = await asyncio.to_thread(vector_store.similarity_search_with_relevance_scores, question, CANDIDATES)
     docs = pick_docs(results, question)

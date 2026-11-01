@@ -24,6 +24,15 @@ async def add_repo(body: AddRepoRequest):
 
     return repo
 
+@router.post("/repos/{repo_id}/reindex")
+async def reindex_repo(repo_id: str):
+    try:
+        return await asyncio.to_thread(reindex_repository, repo_id)
+    except ValueError as e:
+        raise HTTPException(404, str(e))
+    except Exception as e:
+        raise HTTPException(500, f"Re-indexing failed: {e}")
+
 
 @router.delete("/repos/{repo_id}", status_code=204)
 def remove_repo(repo_id: str):
