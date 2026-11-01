@@ -17,8 +17,7 @@ langchain-mistralai
 # ── RAG Pipeline ──────────────────────────────────────────────────────────────
 chromadb
 langchain-chroma
-sentence-transformers
-langchain-huggingface
+fastembed
 
 # ── Utilities ─────────────────────────────────────────────────────────────────
 python-dotenv

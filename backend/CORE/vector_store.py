@@ -1,8 +1,9 @@
 import os
+import time
 import chromadb
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_mistralai import MistralAIEmbeddings
 from langchain_text_splitters import Language, RecursiveCharacterTextSplitter
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -15,18 +16,13 @@ SPLIT_LANG = {
     "Go": Language.GO, "Rust": Language.RUST, "C++": Language.CPP, "C": Language.C, "C#": Language.CSHARP,
     "Ruby": Language.RUBY, "PHP": Language.PHP, "Markdown": Language.MARKDOWN, "HTML": Language.HTML,
 }
-
-_embeddings = None
-
+ 
+EMBEDDING_MODEL = "mistral-embed"
 
 def get_embeddings():
     global _embeddings
-    if _embeddings is None:  # model ek baar hi load hota hai
-        _embeddings = HuggingFaceEmbeddings(
-            model_name=EMBEDDING_MODEL,
-            model_kwargs={"device": "cpu"},
-            encode_kwargs={"normalize_embeddings": True},
-        )
+    if _embeddings is None: 
+        _embeddings = MistralAIEmbeddings(model=EMBEDDING_MODEL)
     return _embeddings
 
 
@@ -54,12 +50,14 @@ def delete_vector_store(repo: str) -> None:
     except Exception:
         pass
 
-
 def build_vector_store(repo: str, files: list) -> int:
     docs = chunk_files(files)
-    delete_vector_store(repo)  # dobara index karne par duplicate chunks na bane
-    Chroma.from_documents(docs, embedding=get_embeddings(), collection_name=repo,
-                          persist_directory=CHROMA_DIR, collection_metadata={"hnsw:space": "cosine"})
+    delete_vector_store(repo)  
+    store = Chroma(collection_name=repo, embedding_function=get_embeddings(),
+                   persist_directory=CHROMA_DIR, collection_metadata={"hnsw:space": "cosine"})
+    for i in range(0, len(docs), 32):
+        store.add_documents(docs[i:i + 32])
+        time.sleep(0.5)  
     return len(docs)
 
 
