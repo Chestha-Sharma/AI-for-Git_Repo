@@ -1,7 +1,7 @@
 import asyncio
 from fastapi import APIRouter, HTTPException, Response
 from schemas import AddRepoRequest
-from services.indexer import index_repository, delete_repository
+from services.indexer import index_repository, reindex_repository, delete_repository
 from CORE.code_parser import repo_to_dict
 from utils.db import repos_col
 
