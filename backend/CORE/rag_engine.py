@@ -16,9 +16,11 @@ MIN_RELEVANCE = 0.30   # isse kam match ho to fallback me code nahi dikhate
 NOISE = re.compile(r"(^|/)(\.github|\.vscode|\.idea|docs?)/|(^|/)(LICENSE|CHANGES|CHANGELOG|CODE_OF_CONDUCT)[^/]*$|\.lock$|-lock\.json$", re.I)
 NOISE_WORDS = ("github", "workflow", "template", "license", "changelog", "ci ", "docs")
 
+
 SMALL_TALK = re.compile(
-    r"^\s*(hi+|hello+|hey+|hola|namaste|yo|sup|good\s+(morning|afternoon|evening)|thanks?|thank\s+you|ok(ay)?|cool|bye|help|who\s+are\s+you|what\s+can\s+you\s+do)\W*\s*$",
-    re.I)
+    r"^\s*(hi+|hello+|hey+|hola|namaste|yo|sup|good\s+(morning|afternoon|evening|night)|thanks?|thank\s+you|ok(ay)?|cool|nice|great|bye|help"
+    r"|who\s+are\s+you|what\s+can\s+you\s+do|what\s+are\s+you(\s+doing)?|how\s+are\s+(you|u)|how('s|\s+is)\s+it\s+going|what'?s\s+up|wass?up"
+    r"|are\s+you\s+(there|ok(ay)?|working)|kaise\s+ho|kya\s+haal(\s+hai)?)\W*\s*$", re.I)
 
 
 OVERVIEW = re.compile(r"\b(what\s+(does|is)\s+(this|the)\s+(project|repo|repository|codebase|app)|what\s+is\s+this|overview|summar(y|ize)|purpose|about\s+this)\b", re.I)
