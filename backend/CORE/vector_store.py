@@ -7,10 +7,8 @@ from langchain_mistralai import MistralAIEmbeddings
 from langchain_text_splitters import Language, RecursiveCharacterTextSplitter
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CHROMA_DIR = os.path.join(BASE_DIR, "vector_db")
-EMBEDDING_MODEL = "all-MiniLM-L6-v2"
-
-# in languages ke liye splitter function/class boundaries par todta hai
+CHROMA_DIR = os.path.join(BASE_DIR, "vector_db") 
+ 
 SPLIT_LANG = {
     "Python": Language.PYTHON, "JavaScript": Language.JS, "TypeScript": Language.TS, "Java": Language.JAVA,
     "Go": Language.GO, "Rust": Language.RUST, "C++": Language.CPP, "C": Language.C, "C#": Language.CSHARP,
@@ -18,7 +16,7 @@ SPLIT_LANG = {
 }
  
 EMBEDDING_MODEL = "mistral-embed"
-
+_embeddings = None 
 def get_embeddings():
     global _embeddings
     if _embeddings is None: 
