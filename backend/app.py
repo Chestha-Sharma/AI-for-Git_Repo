@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-import config  # first, so that .env gets loaded
-from routes import status, repos, files, structure, assistant
+import config   
+from routes import status, repos, files, assistant
 
 app = FastAPI(title="CodeLens API")
 app.add_middleware(
@@ -13,5 +13,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-for module in (status, repos, files, structure, assistant):
+for module in (status, repos, files, assistant):
     app.include_router(module.router, prefix="/api")

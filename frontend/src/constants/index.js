@@ -4,8 +4,7 @@ import { LayoutDashboard, FileCode, FolderGit2, Network, Bot } from 'lucide-reac
 export const NAV_LINKS = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/files', label: 'Files', icon: FileCode },
-  { to: '/repos', label: 'Repositories', icon: FolderGit2 },
-  { to: '/structure', label: 'Structure', icon: Network },
+  { to: '/repos', label: 'Repositories', icon: FolderGit2 }, 
   { to: '/assistant', label: 'AI Assistant', icon: Bot },
 ]
 

@@ -5,8 +5,7 @@ import Navbar from './components/Navbar.jsx'
 import Sidebar from './components/Sidebar.jsx'
 import DashboardPage from './pages/DashboardPage.jsx'
 import FilesPage from './pages/FilesPage.jsx'
-import ReposPage from './pages/ReposPage.jsx'
-import StructurePage from './pages/StructurePage.jsx'
+import ReposPage from './pages/ReposPage.jsx' 
 import AssistantPage from './pages/AssistantPage.jsx'
 import useThemeStore from './store/useThemeStore.js'
 import useFileStore from './store/useFileStore.js'
@@ -40,8 +39,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<DashboardPage />} />
           <Route path="/files" element={<FilesPage />} />
-          <Route path="/repos" element={<ReposPage />} />
-          <Route path="/structure" element={<StructurePage />} />
+          <Route path="/repos" element={<ReposPage />} /> 
           <Route path="/assistant" element={<AssistantPage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
