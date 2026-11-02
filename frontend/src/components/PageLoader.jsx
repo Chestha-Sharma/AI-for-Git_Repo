@@ -1,10 +1,9 @@
 import React from 'react'
-import { Loader } from 'lucide-react'
 
 const PageLoader = () => {
   return (
-    <div className="flex items-center justify-center py-20">
-      <Loader className="size-8 animate-spin" />
+    <div className="py-20 text-center font-mono text-sm opacity-60">
+      loading<span className="animate-pulse">…</span>
     </div>
   )
 }

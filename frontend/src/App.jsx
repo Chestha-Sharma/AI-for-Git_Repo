@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import Navbar from './components/Navbar.jsx'
 import Sidebar from './components/Sidebar.jsx'
 import DashboardPage from './pages/DashboardPage.jsx'
 import FilesPage from './pages/FilesPage.jsx'
-import ReposPage from './pages/ReposPage.jsx' 
+import ReposPage from './pages/ReposPage.jsx'
 import AssistantPage from './pages/AssistantPage.jsx'
 import useThemeStore from './store/useThemeStore.js'
 import useFileStore from './store/useFileStore.js'
@@ -31,20 +31,25 @@ const App = () => {
   }, [theme])
 
   return (
-    <div>
+    <div className="min-h-screen bg-base-100 font-sans text-[15px] text-base-content antialiased">
       <Navbar />
       <Sidebar />
 
-      <main className="min-h-screen p-4 pb-20 pt-20 md:ml-56 md:pb-4">
+      <main className="min-h-screen px-5 pb-20 pt-16 md:ml-52 md:px-8 md:pb-6">
         <Routes>
           <Route path="/" element={<DashboardPage />} />
           <Route path="/files" element={<FilesPage />} />
-          <Route path="/repos" element={<ReposPage />} /> 
-          <Route path="/assistant" element={<AssistantPage />} /> 
+          <Route path="/repos" element={<ReposPage />} />
+          <Route path="/assistant" element={<AssistantPage />} />
         </Routes>
       </main>
 
-      <Toaster />
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          style: { borderRadius: '4px', fontSize: '0.85rem', background: 'var(--fallback-b1,oklch(var(--b1)))', color: 'var(--fallback-bc,oklch(var(--bc)))', border: '1px solid var(--fallback-b3,oklch(var(--b3)))', boxShadow: 'none' },
+        }}
+      />
     </div>
   )
 }

@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
-import { Bot, FileCode, RefreshCw, ThumbsDown, ThumbsUp, User } from 'lucide-react'
 import useChatStore from '../store/useChatStore.js'
 import useRepoStore from '../store/useRepoStore.js'
 import Markdown from './Markdown.jsx'
+import { LINK, LABEL } from '../constants/ui.js'
 
-const confidenceColor = (c) => (c >= 0.5 ? 'badge-success' : c >= 0.25 ? 'badge-warning' : 'badge-error')
+const confidenceColor = (c) => (c >= 0.5 ? 'text-success' : c >= 0.25 ? 'text-warning' : 'text-error')
 
 const ChatMessage = ({ message, onOpen, resolvePath }) => {
   const rateMessage = useChatStore((s) => s.rateMessage)
   const isUser = message.role === 'user'
-    const repo = message.meta?.repoId
+  const repo = message.meta?.repoId
   const reindexRepo = useRepoStore((s) => s.reindexRepo)
   const [busy, setBusy] = useState(false)
   const [done, setDone] = useState(false)
@@ -23,68 +23,54 @@ const ChatMessage = ({ message, onOpen, resolvePath }) => {
     setBusy(false)
     if (ok) setDone(true)
   }
+
+  // user question: simple tinted block. answer: plain text on the page, like a transcript
+  if (isUser) {
+    return (
+      <div>
+        <p className={`${LABEL} mb-1 font-mono`}>you</p>
+        <p className="whitespace-pre-wrap border-l-2 border-base-300 pl-3 text-sm">{message.content}</p>
+      </div>
+    )
+  }
+
   return (
-    <div className={`rise flex gap-3 ${isUser ? 'flex-row-reverse' : ''}`}>
-      <div className={`flex size-8 shrink-0 items-center justify-center rounded-full ${isUser ? 'bg-base-300' : 'bg-gradient-to-br from-primary to-secondary text-primary-content'}`}>
-        {isUser ? <User className="size-4" /> : <Bot className="size-4" />}
-      </div>
+    <div>
+      <p className={`${LABEL} mb-1 font-mono`}>codelens</p>
+      <Markdown text={message.content} onRef={open} resolvePath={resolvePath} />
 
-      <div className={`min-w-0 max-w-[88%] space-y-2 ${isUser ? 'text-right' : ''}`}>
-        <div className={`inline-block rounded-2xl px-4 py-2.5 text-left shadow-sm ${isUser ? 'rounded-tr-sm bg-primary text-primary-content' : 'rounded-tl-sm border border-base-300 bg-base-100'}`}>
-          {isUser ? <p className="whitespace-pre-wrap text-sm">{message.content}</p> : <Markdown text={message.content} onRef={open} resolvePath={resolvePath} />}
-        </div>
-        
-                {/* chunks vector_db se gayab ho gaye hon to ek click me dobara bana do */}
-        {needsReindex && (
-          <div className="text-left">
-            <button className="btn btn-primary btn-sm gap-1" onClick={handleReindex} disabled={busy || done}>
-              <RefreshCw className={`size-3.5 ${busy ? 'animate-spin' : ''}`} />
-              {busy ? 'Re-indexing…' : done ? 'Done, ask again' : 'Re-index this repo'}
-            </button>
-          </div>
-        )}
+      {/* chunks vector_db se gayab ho gaye hon to ek click me dobara bana do */}
+      {needsReindex && (
+        <button className="btn btn-primary btn-sm mt-2 font-normal" onClick={handleReindex} disabled={busy || done}>
+          {busy ? 'Re-indexing…' : done ? 'Done, ask again' : 'Re-index this repo'}
+        </button>
+      )}
 
-        {/* sources: kaun si file / lines se jawab aaya. click karo to code khulta hai */}
-        {message.citations?.length > 0 && (
-          <div className="text-left">
-            <p className="mb-1 text-[11px] font-medium uppercase tracking-wide opacity-50">Sources</p>
-            <div className="flex flex-wrap gap-1.5">
-              {message.citations.map((c, i) => (
-                <button
-                  key={i}
-                  title={c.snippet}
-                  className="flex items-center gap-1.5 rounded-lg border border-base-300 bg-base-100 px-2 py-1 font-mono text-[11px] transition hover:border-primary hover:text-primary"
-                  onClick={() => open({ path: c.path, start: c.start, end: c.end })}
-                >
-                  <FileCode className="size-3 shrink-0" />
-                  <span className="max-w-[16rem] truncate">{c.path}</span>
-                  <span className="opacity-50">{c.start}-{c.end}</span>
+      {/* sources: kaun si file / lines se jawab aaya. click karo to code khulta hai */}
+      {message.citations?.length > 0 && (
+        <div className="mt-3">
+          <p className={`${LABEL} mb-1`}>sources</p>
+          <ul className="space-y-0.5">
+            {message.citations.map((c, i) => (
+              <li key={i}>
+                <button title={c.snippet} className={`${LINK} max-w-full truncate text-left font-mono text-xs`} onClick={() => open({ path: c.path, start: c.start, end: c.end })}>
+                  {c.path}:{c.start}-{c.end}
                 </button>
-              ))}
-            </div>
-          </div>
-        )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
-        {message.meta && (
-          <div className="flex flex-wrap items-center gap-2 text-xs opacity-80">
-            {message.meta.source === 'extractive' ? (
-              <span className="badge badge-ghost badge-sm">Code match only</span>
-            ) : (
-              <span className="badge badge-primary badge-outline badge-sm">AI answer</span>
-            )}
-            {message.citations?.length > 0 && (
-              <span className={`badge badge-sm ${confidenceColor(message.meta.confidence)} badge-outline`}>{(message.meta.confidence * 100).toFixed(0)}% match</span>
-            )}
-            <span className="opacity-60">{(message.meta.latencyMs / 1000).toFixed(1)}s</span>
-            <button className={`hover:text-primary ${message.rating === 1 ? 'text-primary' : ''}`} onClick={() => rateMessage(repo, message.id, 1)} aria-label="Helpful">
-              <ThumbsUp className="size-3.5" />
-            </button>
-            <button className={`hover:text-error ${message.rating === -1 ? 'text-error' : ''}`} onClick={() => rateMessage(repo, message.id, -1)} aria-label="Not helpful">
-              <ThumbsDown className="size-3.5" />
-            </button>
-          </div>
-        )}
-      </div>
+      {message.meta && (
+        <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs opacity-80">
+          <span className="opacity-60">{message.meta.source === 'extractive' ? 'code match only' : 'ai answer'}</span>
+          {message.citations?.length > 0 && <span className={confidenceColor(message.meta.confidence)}>{(message.meta.confidence * 100).toFixed(0)}% match</span>}
+          <span className="opacity-60">{(message.meta.latencyMs / 1000).toFixed(1)}s</span>
+          <button className={`hover:text-primary ${message.rating === 1 ? 'font-medium text-primary' : 'opacity-60'}`} onClick={() => rateMessage(repo, message.id, 1)}>helpful</button>
+          <button className={`hover:text-error ${message.rating === -1 ? 'font-medium text-error' : 'opacity-60'}`} onClick={() => rateMessage(repo, message.id, -1)}>not helpful</button>
+        </p>
+      )}
     </div>
   )
 }

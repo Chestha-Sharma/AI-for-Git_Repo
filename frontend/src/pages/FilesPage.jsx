@@ -31,8 +31,8 @@ const FilesPage = () => {
   if (isLoading && files.length === 0) return <PageLoader />
 
   return (
-    <div className="space-y-4">
-      <PageHeader title="Files" subtitle="Browse every indexed file. Click a row to read the code" />
+    <div className="max-w-5xl space-y-5">
+      <PageHeader title="Files" subtitle="Every indexed file. Click a row to read it" />
 
       <FileFilters total={filtered.length} />
       <LanguageChart files={filtered} onSelect={(language) => setFilters({ language })} />

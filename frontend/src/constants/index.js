@@ -1,11 +1,9 @@
-import { LayoutDashboard, FileCode, FolderGit2, Network, Bot } from 'lucide-react'
-
 // sidebar + mobile nav dono yahi list use karte hain
 export const NAV_LINKS = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/files', label: 'Files', icon: FileCode },
-  { to: '/repos', label: 'Repositories', icon: FolderGit2 }, 
-  { to: '/assistant', label: 'AI Assistant', icon: Bot },
+  { to: '/', label: 'Overview' },
+  { to: '/files', label: 'Files' },
+  { to: '/repos', label: 'Repositories' },
+  { to: '/assistant', label: 'Ask' },
 ]
 
 export const SUGGESTED_QUESTIONS = [

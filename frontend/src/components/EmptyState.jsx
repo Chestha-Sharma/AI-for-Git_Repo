@@ -1,10 +1,8 @@
 import React from 'react'
-import { Inbox } from 'lucide-react'
 
 const EmptyState = ({ text }) => {
   return (
-    <div className="flex flex-col items-center gap-2 p-8 text-center text-sm opacity-60">
-      <Inbox className="size-8 opacity-50" />
+    <div className="rounded border border-dashed border-base-300 p-8 text-center text-sm opacity-70">
       <p>{text}</p>
     </div>
   )

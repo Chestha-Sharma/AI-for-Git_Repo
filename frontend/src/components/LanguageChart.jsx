@@ -11,22 +11,22 @@ const LanguageChart = ({ files, onSelect }) => {
   const max = rows[0]?.[1] || 1
 
   return (
-    <div className="card border border-base-300 bg-base-100">
-      <div className="card-body gap-2 p-4">
-        <h3 className="text-sm font-semibold">Lines of code by language</h3>
-        {rows.length === 0 ? (
-          <EmptyState text="No code indexed yet." />
-        ) : (
-          rows.map(([lang, n]) => (
-            <button key={lang} className="flex items-center gap-3 text-xs hover:opacity-80" onClick={() => onSelect(lang)}>
-              <span className="w-24 text-left">{lang}</span>
-              <span className="flex-1"><span className="block h-3 rounded bg-primary" style={{ width: `${(n / max) * 100}%` }} /></span>
-              <span className="w-16 text-right opacity-60">{n.toLocaleString()}</span>
+    <section>
+      <h3 className="mb-2 text-sm font-semibold">Lines of code by language</h3>
+      {rows.length === 0 ? (
+        <EmptyState text="No code indexed yet." />
+      ) : (
+        <div className="space-y-1">
+          {rows.map(([lang, n]) => (
+            <button key={lang} className="flex w-full items-center gap-3 text-xs hover:text-primary" onClick={() => onSelect(lang)}>
+              <span className="w-24 text-left font-mono">{lang}</span>
+              <span className="flex-1"><span className="block h-1.5 bg-primary/70" style={{ width: `${(n / max) * 100}%` }} /></span>
+              <span className="w-16 text-right font-mono opacity-60">{n.toLocaleString()}</span>
             </button>
-          ))
-        )}
-      </div>
-    </div>
+          ))}
+        </div>
+      )}
+    </section>
   )
 }
 

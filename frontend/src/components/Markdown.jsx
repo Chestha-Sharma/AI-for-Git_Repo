@@ -20,14 +20,14 @@ const inline = (text, onRef, resolvePath, key) => {
         out.push(
           <button
             key={`${key}-${i++}`}
-            className="code inline rounded bg-primary/10 px-1.5 py-0.5 font-mono text-[0.78rem] text-primary hover:bg-primary/20"
+            className="rounded bg-primary/10 px-1 py-0.5 font-mono text-[0.8rem] text-primary hover:bg-primary/20"
             onClick={() => onRef({ path, start: ref[2] ? Number(ref[2]) : null, end: ref[3] ? Number(ref[3]) : null })}
           >
             {code}
           </button>
         )
       } else {
-        out.push(<code key={`${key}-${i++}`} className="inline">{code}</code>)
+        out.push(<code key={`${key}-${i++}`} className="rounded bg-base-content/10 px-1 py-0.5 font-mono text-[0.8rem]">{code}</code>)
       }
     } else {
       out.push(<strong key={`${key}-${i++}`}>{tok.slice(2, -2)}</strong>)
@@ -65,14 +65,14 @@ const Markdown = ({ text, onRef, resolvePath }) => {
   }
 
   return (
-    <div className="md text-sm">
+    <div className="text-sm">
       {blocks.map((b, idx) => {
-        if (b.type === 'code') return <pre key={idx}><code>{b.text}</code></pre>
-        if (b.type === 'p') return <p key={idx}>{inline(b.text, onRef, resolvePath, idx)}</p>
+        if (b.type === 'code') return <pre key={idx} className="my-2.5 overflow-x-auto rounded border border-base-300 bg-base-200 px-3.5 py-3 font-mono text-xs leading-relaxed"><code>{b.text}</code></pre>
+        if (b.type === 'p') return <p key={idx} className="my-1.5 leading-relaxed">{inline(b.text, onRef, resolvePath, idx)}</p>
         const Tag = b.type
         return (
-          <Tag key={idx}>
-            {b.items.map((it, j) => <li key={j}>{inline(it, onRef, resolvePath, `${idx}-${j}`)}</li>)}
+          <Tag key={idx} className={`my-1.5 ml-5 ${b.type === 'ol' ? 'list-decimal' : 'list-disc'}`}>
+            {b.items.map((it, j) => <li key={j} className="my-0.5 leading-relaxed">{inline(it, onRef, resolvePath, `${idx}-${j}`)}</li>)}
           </Tag>
         )
       })}

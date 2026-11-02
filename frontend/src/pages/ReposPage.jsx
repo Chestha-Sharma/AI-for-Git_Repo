@@ -25,10 +25,10 @@ const ReposPage = () => {
 
   return (
     <div>
-      <PageHeader title="Repositories" subtitle="Pick a repository to browse its files or ask the AI about it" />
+      <PageHeader title="Repositories" subtitle="Browse a repo’s files or ask questions about it" />
 
       {repos.length === 0 ? (
-        <EmptyState text="No repositories yet. Click Add repo or run `npm run seed`." />
+        <EmptyState text="No repositories yet. Use “add repo” at the top or run `npm run seed`." />
       ) : (
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {repos.map((r) => (

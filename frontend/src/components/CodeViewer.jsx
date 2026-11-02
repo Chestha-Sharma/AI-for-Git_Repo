@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { X, FileCode } from 'lucide-react'
 import { axiosInstance } from '../lib/axios.js'
 import PageLoader from './PageLoader.jsx'
+import { LINK } from '../constants/ui.js'
 
 // file ka poora code line numbers ke saath dikhata hai. start/end diye ho to wo lines highlight hoti hain
 const CodeViewer = ({ repo, path, start, end, onClose }) => {
@@ -24,14 +24,13 @@ const CodeViewer = ({ repo, path, start, end, onClose }) => {
 
   return (
     <dialog className="modal modal-open">
-      <div className="modal-box max-w-4xl overflow-hidden p-0">
-        <div className="flex items-center justify-between gap-3 border-b border-base-300 bg-base-100 px-4 py-3">
-          <div className="flex min-w-0 items-center gap-2">
-            <FileCode className="size-4 shrink-0 text-primary" />
-            <span className="truncate font-mono text-sm font-semibold">{path}</span>
-            {start && <span className="badge badge-primary badge-outline badge-sm shrink-0">lines {start}{end && end !== start ? `-${end}` : ''}</span>}
+      <div className="modal-box max-w-4xl overflow-hidden rounded border border-base-300 p-0 shadow-none">
+        <div className="flex items-center justify-between gap-3 border-b border-base-300 px-4 py-2.5">
+          <div className="flex min-w-0 items-baseline gap-3">
+            <span className="truncate font-mono text-sm font-medium">{path}</span>
+            {start && <span className="shrink-0 font-mono text-xs text-primary">lines {start}{end && end !== start ? `-${end}` : ''}</span>}
           </div>
-          <button className="btn btn-ghost btn-xs btn-circle" onClick={onClose} aria-label="Close"><X className="size-4" /></button>
+          <button className={`${LINK} shrink-0 text-sm`} onClick={onClose}>close</button>
         </div>
         {content === null ? (
           <PageLoader />
@@ -42,7 +41,7 @@ const CodeViewer = ({ repo, path, start, end, onClose }) => {
               const hit = start && n >= start && n <= last
               return (
                 <div key={i} ref={n === start ? firstRef : null} className={`flex ${hit ? 'bg-primary/15' : ''}`}>
-                  <span className={`w-12 shrink-0 select-none pr-3 text-right ${hit ? 'text-primary opacity-100' : 'opacity-40'}`}>{n}</span>
+                  <span className={`w-12 shrink-0 select-none pr-3 text-right ${hit ? 'text-primary' : 'opacity-40'}`}>{n}</span>
                   <span className="whitespace-pre">{line || ' '}</span>
                 </div>
               )

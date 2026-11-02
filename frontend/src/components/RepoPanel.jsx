@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react'
-import { ChevronDown, ChevronRight, FileCode, Folder, Search } from 'lucide-react'
 
 const buildTree = (files) => {
   const root = { children: {}, files: [] }
@@ -21,10 +20,9 @@ const Folder_ = ({ name, node, depth, onOpen }) => {
   const [open, setOpen] = useState(depth === 0 && name !== '.github')
   return (
     <li>
-      <button className="flex w-full items-center gap-1 rounded px-1 py-1 text-left text-xs hover:bg-base-200" style={{ paddingLeft: depth * 12 + 4 }} onClick={() => setOpen(!open)}>
-        {open ? <ChevronDown className="size-3 shrink-0" /> : <ChevronRight className="size-3 shrink-0" />}
-        <Folder className="size-3.5 shrink-0 text-warning" />
-        <span className="truncate font-medium">{name}</span>
+      <button className="flex w-full items-center gap-1.5 py-0.5 text-left font-mono text-xs hover:text-primary" style={{ paddingLeft: depth * 12 + 4 }} onClick={() => setOpen(!open)}>
+        <span className="w-2 shrink-0 opacity-50">{open ? '-' : '+'}</span>
+        <span className="truncate">{name}/</span>
         <span className="ml-auto opacity-40">{countFiles(node)}</span>
       </button>
       {open && <Tree node={node} depth={depth + 1} onOpen={onOpen} />}
@@ -39,9 +37,8 @@ const Tree = ({ node, depth, onOpen }) => (
     ))}
     {node.files.sort((a, b) => a.name.localeCompare(b.name)).map(({ name, file }) => (
       <li key={file.id}>
-        <button className="flex w-full items-center gap-1.5 rounded px-1 py-1 text-left text-xs hover:bg-primary/10 hover:text-primary" style={{ paddingLeft: depth * 12 + 18 }} onClick={() => onOpen({ repo: file.repo, path: file.path })}>
-          <FileCode className="size-3.5 shrink-0 opacity-60" />
-          <span className="truncate">{name}</span>
+        <button className="block w-full truncate py-0.5 text-left font-mono text-xs opacity-80 hover:text-primary hover:opacity-100" style={{ paddingLeft: depth * 12 + 20 }} onClick={() => onOpen({ repo: file.repo, path: file.path })}>
+          {name}
         </button>
       </li>
     ))}
@@ -58,30 +55,15 @@ const RepoPanel = ({ repo, files, onOpen }) => {
   }, [files, q])
 
   if (!repo) {
-    return <div className="rounded-2xl border border-dashed border-base-300 p-6 text-center text-sm opacity-60">No repository yet. Click <b>Add repo</b> to index one.</div>
+    return <div className="rounded border border-dashed border-base-300 p-6 text-center text-sm opacity-60">No repository yet. Use “add repo” to index one.</div>
   }
 
   return (
-    <div className="flex h-full min-h-[20rem] flex-col overflow-hidden rounded-2xl border border-base-300 bg-base-100/70 shadow-sm">
+    <div className="flex h-full min-h-[20rem] flex-col overflow-hidden rounded border border-base-300">
       <div className="space-y-2 border-b border-base-300 p-3">
-        <h3 className="truncate text-sm font-bold">{repo.name}</h3>
-        <div className="grid grid-cols-3 gap-2 text-center">
-          {[['Files', repo.files], ['Lines', repo.lines.toLocaleString()], ['Chunks', repo.chunks]].map(([label, value]) => (
-            <div key={label} className="rounded-lg bg-base-200 py-1.5">
-              <p className="text-sm font-semibold">{value}</p>
-              <p className="text-[10px] uppercase tracking-wide opacity-50">{label}</p>
-            </div>
-          ))}
-        </div>
-        <div className="flex flex-wrap gap-1">
-          {Object.entries(repo.languages).map(([lang, n]) => (
-            <span key={lang} className="badge badge-ghost badge-sm">{lang} {n}</span>
-          ))}
-        </div>
-        <label className="input input-bordered input-sm flex items-center gap-2">
-          <Search className="size-3.5 opacity-50" />
-          <input className="grow" placeholder="Find a file…" value={q} onChange={(e) => setQ(e.target.value)} />
-        </label>
+        <h3 className="truncate font-mono text-sm font-medium">{repo.name}</h3>
+        <p className="font-mono text-xs opacity-60">{repo.files} files · {repo.lines.toLocaleString()} lines · {repo.chunks} chunks</p>
+        <input className="input input-bordered input-sm w-full font-mono text-xs" placeholder="find a file" value={q} onChange={(e) => setQ(e.target.value)} />
       </div>
 
       <div className="flex-1 overflow-auto p-2">
@@ -92,9 +74,8 @@ const RepoPanel = ({ repo, files, onOpen }) => {
             <ul>
               {matches.map((f) => (
                 <li key={f.id}>
-                  <button className="flex w-full items-center gap-1.5 rounded px-2 py-1 text-left text-xs hover:bg-primary/10 hover:text-primary" onClick={() => onOpen({ repo: f.repo, path: f.path })}>
-                    <FileCode className="size-3.5 shrink-0 opacity-60" />
-                    <span className="truncate">{f.path}</span>
+                  <button className="block w-full truncate px-1 py-0.5 text-left font-mono text-xs hover:text-primary" onClick={() => onOpen({ repo: f.repo, path: f.path })}>
+                    {f.path}
                   </button>
                 </li>
               ))}

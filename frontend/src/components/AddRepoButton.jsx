@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Plus } from 'lucide-react'
 import useRepoStore from '../store/useRepoStore.js'
+import { LINK } from '../constants/ui.js'
 
 const AddRepoButton = () => {
   const [open, setOpen] = useState(false)
@@ -19,19 +19,18 @@ const AddRepoButton = () => {
 
   return (
     <>
-      <button className="btn btn-primary btn-sm gap-2" onClick={() => setOpen(true)}>
-        <Plus className="size-4" />
-        <span className="hidden sm:inline">{indexing ? 'Indexing…' : 'Add repo'}</span>
+      <button className="btn btn-primary btn-sm min-h-0 h-8 font-normal" onClick={() => setOpen(true)}>
+        {indexing ? 'indexing…' : '+ add repo'}
       </button>
 
       {open && (
         <dialog className="modal modal-open">
-          <div className="modal-box space-y-3">
-            <h3 className="text-lg font-bold">Add a GitHub repository</h3>
+          <div className="modal-box space-y-3 rounded border border-base-300 shadow-none">
+            <h3 className="font-serif text-lg font-semibold">Add a GitHub repository</h3>
             <p className="text-sm opacity-60">Public repos only. Indexing takes a minute or two.</p>
             <input
               type="text"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full font-mono text-sm"
               placeholder="https://github.com/owner/repo"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
@@ -43,9 +42,9 @@ const AddRepoButton = () => {
                 <span className="loading loading-spinner loading-xs" /> {progress}
               </p>
             )}
-            <div className="modal-action">
-              <button className="btn btn-ghost btn-sm" onClick={() => setOpen(false)}>Close</button>
-              <button className="btn btn-primary btn-sm" onClick={submit} disabled={indexing || !url.trim()}>Index repo</button>
+            <div className="modal-action items-center gap-3">
+              <button className={`${LINK} text-sm`} onClick={() => setOpen(false)}>Close</button>
+              <button className="btn btn-primary btn-sm font-normal" onClick={submit} disabled={indexing || !url.trim()}>Index repo</button>
             </div>
           </div>
           <div className="modal-backdrop" onClick={() => setOpen(false)} />

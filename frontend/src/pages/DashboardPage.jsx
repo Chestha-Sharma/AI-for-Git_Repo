@@ -1,6 +1,5 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FolderGit2, FileCode, Braces, Layers } from 'lucide-react'
 import useFileStore from '../store/useFileStore.js'
 import useRepoStore from '../store/useRepoStore.js'
 import PageHeader from '../components/PageHeader.jsx'
@@ -39,23 +38,23 @@ const DashboardPage = () => {
   }
 
   return (
-    <div>
-      <PageHeader title="Dashboard" subtitle="Overview of your indexed repositories and code" />
+    <div className="max-w-5xl">
+      <PageHeader title="Overview" subtitle="What you have indexed so far" />
 
-      <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatCard title="Repositories" value={repos.length} icon={FolderGit2} />
-        <StatCard title="Files" value={files.length.toLocaleString()} icon={FileCode} color="text-info" />
-        <StatCard title="Lines of code" value={lines.toLocaleString()} icon={Braces} color="text-success" />
-        <StatCard title="Code chunks" value={chunks.toLocaleString()} icon={Layers} color="text-warning" />
+      <div className="mb-8 grid grid-cols-2 gap-x-6 gap-y-4 border-b border-base-300 pb-6 lg:grid-cols-4">
+        <StatCard title="repositories" value={repos.length} />
+        <StatCard title="files" value={files.length.toLocaleString()} />
+        <StatCard title="lines of code" value={lines.toLocaleString()} />
+        <StatCard title="code chunks" value={chunks.toLocaleString()} />
       </div>
 
-      <div className="mb-4">
+      <div className="mb-8">
         <LanguageChart files={files} onSelect={openLanguage} />
       </div>
 
-      <h3 className="mb-2 font-semibold">Repositories</h3>
+      <h3 className="mb-2 text-sm font-semibold">Repositories</h3>
       {repos.length === 0 ? (
-        <EmptyState text="No repositories yet. Click Add repo or run `npm run seed`." />
+        <EmptyState text="No repositories yet. Use “add repo” at the top or run `npm run seed`." />
       ) : (
         <div className="grid gap-3 md:grid-cols-2">
           {repos.map((r) => (
